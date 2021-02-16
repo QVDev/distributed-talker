@@ -10,10 +10,8 @@ gun.on("in", function(msg) {
     if (sink == undefined) {
         sink = new XAudioServer(1, 8000, 320, 512, function(samplesRequested) {}, 0);
     }
-    // console.log(msg.data)
-    let buffer = new Float32Array(Object.values(msg.data));
-    // XAudioServer.prototype.callbackBasedWriteAudio(buffer);
 
+    let buffer = new Float32Array(Object.values(msg.data));
     sink.writeAudio(buffer);
 })
 
