@@ -28,47 +28,16 @@
             </ul>
         </header>
         <section>
-            <h2>Samples</h2>
-            <p>
-                <a href="assets/female.wav">female.wav</a>
-            </p>
-            <p>
-                <a href="assets/wb_male_speex_21.wav">wb_male_speex_21.wav</a>
-            </p>
-            <p>
-                <a href="assets/female.ogg">female.ogg</a><span> (8000 Hz, Narrowband mode, Speex Quality Parameter=8/10)</span>
-            </p>
-            <p>
-                <a href="assets/wb_male_speex_21.ogg">wb_male_speex_21.ogg</a><span> (16000 Hz, Wideband mode, Speex Quality Parameter=8/10)</span>
-            </p>
-
-            <h2>Encoding some WAV to OGG</h2>
-            <p>
-                <span class="bold">Encode (*.wav):</span>
-                <input type="file" id="file_wav" name="file_wav" />
-            </p>
-
-            <h2>Decoding some OGG to WAV</h2>
-            <p>
-                <span class="bold">Decode (*.ogg):</span>
-                <input type="file" id="file_ogg" name="file_ogg" />
-            </p>
-
             <h2>Test microphone loopback for audio in real-time</h2>
             <p>
                 <span class="bold">Microphone (PCM):</span>
-                <button id="flash-capture">Capture</button>
+                <button id="flash-capture">Broadcast</button>
             </p>
 
             <div id="console" class="highlight">
                 <pre>
 				Encode times (in miliseconds): <span id="etimes"></span>
-				Total Encoding time: <span id="etotaltime"></span>
 				Decode time (in miliseconds): <span id="dtimes"></span>
-				Total Decoding time: <span id="dtotaltime"></span>
-
-				SPX File size (in bytes): <span id="esize"></span>
-				PCM File size (in bytes): <span id="dsize"></span>
 				Number of samples: <span id="nrsamples"></span>
         	</pre>
             </div>

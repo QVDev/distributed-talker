@@ -3,7 +3,16 @@ const gun = Gun(opt);
 
 var sink;
 
+const queryString = window.location.search;
+const urlParams = new URLSearchParams(queryString);
+const room = urlParams.get('room')
+console.log(room);
+
 gun.on("in", function(msg) {
+    if (msg.roomId !== room) {
+        return;
+    }
+
     if (document.launchedContext == undefined) {
         return;
     }
@@ -17,6 +26,7 @@ gun.on("in", function(msg) {
 
 function send(data) {
     gun.on("out", {
+        roomId: room,
         data: data
     });
 }
