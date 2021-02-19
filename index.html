@@ -2,91 +2,36 @@
 <html lang="en">
 
 <head>
-    <title>Free Speech Codec (Speex)</title>
+    <title>Audio channels</title>
 
-    <meta name="description" content="Speex codec in Javascript">
-    <meta name="author" content="Joao Martins">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="description" content="Social audio app">
+    <meta name="author" content="QVDev">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <link rel="stylesheet" href="public/css/style.css">
+    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+    <script src="./clicks.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/gun/gun.js"></script>
+
 </head>
 
 <body>
-    <div class="wrapper">
-        <header>
-            <h1>speex.js</h1>
-            <p>A Free Codec For Free Speech</p>
-            <p class="view"><a href="http://github.com/jpemartins/speex.js">View the Project on GitHub <small>jpemartins/speex.js</small></a></p>
-            <ul>
-                <li><a href="https://github.com/jpemartins/speex.js/zipballmus/master">Download <strong>ZIP File</strong></a></li>
-                <li><a href="https://github.com/jpemartins/speex.js/tarball/master">Download <strong>TAR Ball</strong></a></li>
-                <li><a href="http://github.com/jpemartins/speex.js">Fork On <strong>GitHub</strong></a></li>
-            </ul>
-        </header>
-        <section>
-            <h2>Test microphone loopback for audio in real-time</h2>
-            <p>
-                <span class="bold">Microphone (PCM):</span>
-                <button id="flash-capture">Broadcast</button>
-            </p>
-
-            <div id="console" class="highlight">
-                <pre>
-				Encode times (in miliseconds): <span id="etimes"></span>
-				Decode time (in miliseconds): <span id="dtimes"></span>
-				Number of samples: <span id="nrsamples"></span>
-        	</pre>
+    <div class="container mx-auto h-screen p-20 items-center" style="background-color: cadetblue;">
+        <div class="flex">
+            <div class="m-auto">
+                <P class="text-6xl text-center text-white font-bold">ROOMS</P>
             </div>
-        </section>
-        <footer>
-            <p>This project is maintained by <a href="http://github.com/jpemartins">João Martins</a></p>
-            <p><small>Original Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
-        </footer>
+            <div class="flex float-right">
+                <div class="">
+                    <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-2 text-3xl rounded" onclick="createRoom()">Create room</button>
+                </div>
+            </div>
+        </div>
+        <div id="room-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6 p-6 my-6">
+            <!-- Will be filled automatically by room.js when there are rooms available -->
+        </div>
     </div>
-    <script>
-        __MediaCaptureUI = {
-            stylesheet: "public/css/mediacapture.css",
-            swf: "public/assets/MediaCapture.swf",
-            timeout: 500
-        }
-    </script>
-
-    <!-- Dependencies -->
-    <script src="public/js/lib/xaudio.js"></script>
-    <script src="public/js/lib/pcmdata.min.js"></script>
-    <script src="public/js/lib/swfobject.js"></script>
-
-    <!-- Other Libraries/Polyfills -->
-    <script src="public/js/lib/usertiming.js"></script>
-    <script src="public/js/lib/bitstring.js"></script>
-    <script src="public/js/lib/mediacapture.js"></script>
-
-    <!-- Development
-	<script src="src/ogg.js"></script>
-	<script src="src/libspeexdsp.js"></script>
-	<script src="src/libspeex.js"></script>
-	<script src="src/util.js"></script>
-	<script src="src/types.js"></script>
-	<script src="src/speex.js"></script>
-	<script src="src/codec.js"></script>
-	<script src="src/decoder.js"></script>
-	<script src="src/encoder.js"></script>
-  -->
-
-    <!-- Production -->
-    <script src="dist/speex.min.js"></script>
-
-    <!-- For input/microphone handling and codec API usage -->
-    <script src="public/js/microphone.js"></script>
-    <script src="public/js/audio.js"></script>
-    <script src="public/js/application.js"></script>
-
-    <!-- DamSocket -->
-    <script src="public/js/damsocket.js"></script>
+    <script src="./room.js"></script>
 </body>
 
 </html>
