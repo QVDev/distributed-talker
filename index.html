@@ -30,25 +30,9 @@
         <div id="room-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6 p-6 my-6">
             <!-- Will be filled automatically by room.js when there are rooms available -->
         </div>
-    </div>
-    <div class="wrapper">
-
-        <header>
-            <h1>Voice-change-O-matic</h1>
-        </header>
-
-        <canvas class="visualizer" width="640" height="100"></canvas>
-
+        <!-- Audio visualizer from local audio -->
+        <canvas class="visualizer"></canvas>
         <form class="controls">
-            <div>
-                <label for="voice">Voice setting</label>
-                <select id="voice" name="voice">
-              <option value="distortion">Distortion</option>
-              <option value="convolver">Reverb</option>
-              <option value="biquad">Bass Boost</option>
-              <option value="off" selected>Off</option>
-            </select>
-            </div>
             <div>
                 <label for="visual">Visualizer setting</label>
                 <select id="visual" name="visual">
@@ -61,9 +45,9 @@
                 <a class="mute">Mute</a>
             </div>
         </form>
-
-
+        <!-- Audio visualizer from local audio -->
     </div>
+
     <script src="./room.js"></script>
     <script src="./visualizer.js"></script>
 </body>
