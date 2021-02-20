@@ -27,11 +27,6 @@ var htmlRoom =
     </div>`;
 
 const grid = document.getElementById("room-grid");
-// for (var i = 1; i < 10; i++) {
-//     var temp = document.createElement('div');
-//     temp.innerHTML = htmlRoom.format(i);
-//     grid.append(temp);
-// }
 
 function addRoom(title, description) {
     if (document.getElementById(title) == undefined) {
@@ -39,11 +34,6 @@ function addRoom(title, description) {
         temp.innerHTML = htmlRoom.format(title, description);
         grid.append(temp);
     }
-}
-
-function removeRoom(title) {
-    // document.getElementById(`room_card_${title}`);
-    // window.room = undefined;
 }
 
 function joiner(id) {
