@@ -43,13 +43,11 @@ function initVisualizer() {
         HEIGHT = 50; //canvas.height;
 
 
-        var visualSetting = visualSelect; //.value;
-        console.log(visualSetting);
+        var visualSetting = visualSelect; //.value;        
 
         if (visualSetting === "sinewave") {
             analyser.fftSize = 2048;
             var bufferLength = analyser.fftSize;
-            console.log(bufferLength);
             var dataArray = new Uint8Array(bufferLength);
 
             canvasCtx.clearRect(0, 0, WIDTH, HEIGHT);
@@ -94,7 +92,6 @@ function initVisualizer() {
         } else if (visualSetting == "frequencybars") {
             analyser.fftSize = 256;
             var bufferLengthAlt = analyser.frequencyBinCount;
-            console.log(bufferLengthAlt);
             var dataArrayAlt = new Uint8Array(bufferLengthAlt);
 
             canvasCtx.clearRect(0, 0, WIDTH, HEIGHT);
