@@ -570,7 +570,7 @@ function resetCallbackAPIAudioBuffer(APISampleRate, bufferAlloc) {
     }
 }
 //Initialize WebKit Audio:
-document.onclick = function() {
+function initXAudio() {
     if (!launchedContext) {
         try {
             audioContextHandle = new webkitAudioContext(); //Create a system audio context.

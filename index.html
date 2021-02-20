@@ -31,25 +31,32 @@
             <!-- Will be filled automatically by room.js when there are rooms available -->
         </div>
         <!-- Audio visualizer from local audio -->
-        <canvas class="visualizer"></canvas>
-        <form class="controls">
-            <div>
-                <label for="visual">Visualizer setting</label>
-                <select id="visual" name="visual">
-              <option value="sinewave">Sinewave</option>
-              <option value="frequencybars" selected>Frequency bars</option>
-              <option value="off">Off</option>
-            </select>
-            </div>
-            <div>
-                <a class="mute">Mute</a>
-            </div>
-        </form>
+        <canvas id="visualizer" class="visualizer visualizer absolute top-20 left-4 pointer-events-none"></canvas>
         <!-- Audio visualizer from local audio -->
     </div>
 
     <script src="./room.js"></script>
     <script src="./visualizer.js"></script>
+
+    <script src="dist/speex.min.js"></script>
+
+    <!-- Dependencies -->
+    <script src="public/js/lib/xaudio.js"></script>
+    <script src="public/js/lib/pcmdata.min.js"></script>
+    <script src="public/js/lib/swfobject.js"></script>
+
+    <!-- Other Libraries/Polyfills -->
+    <script src="public/js/lib/usertiming.js"></script>
+    <script src="public/js/lib/bitstring.js"></script>
+    <script src="public/js/lib/mediacapture.js"></script>
+
+    <!-- For input/microphone handling and codec API usage -->
+    <script src="public/js/microphone.js"></script>
+    <script src="public/js/audio.js"></script>
+    <script src="public/js/application.js"></script>
+
+    <!-- DamSocket -->
+    <script src="public/js/damsocket.js"></script>
 </body>
 
 </html>

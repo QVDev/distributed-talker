@@ -79,8 +79,8 @@
             }
 
             if (nr_measures >= NR_MEASURES_PER_SEC) {
-                var st = stats();
-                printStreamTimes(st[1], st[0], nr_samples);
+                // var st = stats();
+                // printStreamTimes(st[1], st[0], nr_samples);
             }
         }
 
@@ -164,7 +164,12 @@
             onsamples: onSamplesDec
         });
     }
+    if (document.getElementById('flash-capture')) {
+        document.getElementById('flash-capture').addEventListener('click', startCapture, false);
+    } else {
+        document.getElementById('1').addEventListener('click', startCapture, false);
+    }
 
-    document.getElementById('flash-capture').addEventListener('click', startCapture, false);
+
 
 })();

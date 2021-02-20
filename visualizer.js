@@ -1,45 +1,10 @@
 var isStarted = false;
 
-function init() {
+function initVisualizer() {
     if (isStarted == true) {
         return;
     }
     isStarted = true;
-    // Older browsers might not implement mediaDevices at all, so we set an empty object first
-    if (navigator.mediaDevices === undefined) {
-        navigator.mediaDevices = {};
-    }
-
-
-    // Some browsers partially implement mediaDevices. We can't just assign an object
-    // with getUserMedia as it would overwrite existing properties.
-    // Here, we will just add the getUserMedia property if it's missing.
-    if (navigator.mediaDevices.getUserMedia === undefined) {
-        navigator.mediaDevices.getUserMedia = function(constraints) {
-
-            // First get ahold of the legacy getUserMedia, if present
-            var getUserMedia = navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
-
-            // Some browsers just don't implement it - return a rejected promise with an error
-            // to keep a consistent interface
-            if (!getUserMedia) {
-                return Promise.reject(new Error('getUserMedia is not implemented in this browser'));
-            }
-
-            // Otherwise, wrap the call to the old navigator.getUserMedia with a Promise
-            return new Promise(function(resolve, reject) {
-                getUserMedia.call(navigator, constraints, resolve, reject);
-            });
-        }
-    }
-
-
-
-    // set up forked web audio context, for multiple browsers
-    // window. is needed otherwise Safari explodes
-
-    var audioCtx = new(window.AudioContext || window.webkitAudioContext)();
-    var source;
 
     // grab the mute button to use below
 
@@ -47,52 +12,38 @@ function init() {
 
     //set up the different audio nodes we will use for the app
 
-    var analyser = audioCtx.createAnalyser();
+    var analyser = audioContextHandle.createAnalyser();
     analyser.minDecibels = -90;
     analyser.maxDecibels = -10;
     analyser.smoothingTimeConstant = 0.85;
 
-    var gainNode = audioCtx.createGain();
 
     // set up canvas context for visualizer
 
     var canvas = document.querySelector('.visualizer');
     var canvasCtx = canvas.getContext("2d");
 
-    var intendedWidth = document.getElementById('room-grid').clientWidth;
+    var intendedWidth = 75; //document.getElementById('room-grid').clientWidth;
 
     canvas.setAttribute('width', intendedWidth);
 
-    var visualSelect = document.getElementById("visual");
+    var visualSelect = "frequencybars"; //;document.getElementById("visual");
 
     var drawVisual;
 
     //main block for doing the audio recording
 
-    if (navigator.mediaDevices.getUserMedia) {
-        console.log('getUserMedia supported.');
-        var constraints = { audio: true }
-        navigator.mediaDevices.getUserMedia(constraints)
-            .then(
-                function(stream) {
-                    source = audioCtx.createMediaStreamSource(stream);
-                    source.connect(gainNode);
-                    gainNode.connect(analyser);
-                    analyser.connect(audioCtx.destination);
+    audioNode.connect(analyser);
+    visualize();
 
-                    visualize();
-                })
-            .catch(function(err) { console.log('The following gUM error occured: ' + err); })
-    } else {
-        console.log('getUserMedia not supported on your browser!');
-    }
+
 
     function visualize() {
-        WIDTH = canvas.width;
-        HEIGHT = canvas.height;
+        WIDTH = 75; //canvas.width;
+        HEIGHT = 50; //canvas.height;
 
 
-        var visualSetting = visualSelect.value;
+        var visualSetting = visualSelect; //.value;
         console.log(visualSetting);
 
         if (visualSetting === "sinewave") {
@@ -104,13 +55,13 @@ function init() {
             canvasCtx.clearRect(0, 0, WIDTH, HEIGHT);
 
             var draw = function() {
-
+                canvasCtx.clearRect(0, 0, WIDTH, HEIGHT);
                 drawVisual = requestAnimationFrame(draw);
 
                 analyser.getByteTimeDomainData(dataArray);
 
-                canvasCtx.fillStyle = 'rgb(200, 200, 200)';
-                canvasCtx.fillRect(0, 0, WIDTH, HEIGHT);
+                // canvasCtx.fillStyle = 'rgb(200, 200, 200)';
+                // canvasCtx.fillRect(0, 0, WIDTH, HEIGHT);
 
                 canvasCtx.lineWidth = 2;
                 canvasCtx.strokeStyle = 'rgb(0, 0, 0)';
@@ -149,12 +100,13 @@ function init() {
             canvasCtx.clearRect(0, 0, WIDTH, HEIGHT);
 
             var drawAlt = function() {
+                canvasCtx.clearRect(0, 0, WIDTH, HEIGHT);
                 drawVisual = requestAnimationFrame(drawAlt);
 
                 analyser.getByteFrequencyData(dataArrayAlt);
 
-                canvasCtx.fillStyle = 'rgb(0, 0, 0)';
-                canvasCtx.fillRect(0, 0, WIDTH, HEIGHT);
+                // canvasCtx.fillStyle = 'rgb(0, 0, 0)';
+                // canvasCtx.fillRect(0, 0, WIDTH, HEIGHT);
 
                 var barWidth = (WIDTH / bufferLengthAlt) * 2.5;
                 var barHeight;
@@ -163,7 +115,7 @@ function init() {
                 for (var i = 0; i < bufferLengthAlt; i++) {
                     barHeight = dataArrayAlt[i];
 
-                    canvasCtx.fillStyle = 'rgb(' + (barHeight + 100) + ',50,50)';
+                    canvasCtx.fillStyle = 'rgb(50,' + (barHeight + 100) + ',50)';
                     canvasCtx.fillRect(x, HEIGHT - barHeight / 2, barWidth, barHeight / 2);
 
                     x += barWidth + 1;
@@ -182,22 +134,22 @@ function init() {
 
     // event listeners to change visualize and voice settings
 
-    visualSelect.onchange = function() {
-        window.cancelAnimationFrame(drawVisual);
-        visualize();
-    };
+    // visualSelect.onchange = function() {
+    //     window.cancelAnimationFrame(drawVisual);
+    //     visualize();
+    // };
 
-    mute.onclick = voiceMute;
+    // mute.onclick = voiceMute;
 
-    function voiceMute() {
-        if (mute.id === "") {
-            gainNode.gain.value = 0;
-            mute.id = "activated";
-            mute.innerHTML = "Unmute";
-        } else {
-            gainNode.gain.value = 1;
-            mute.id = "";
-            mute.innerHTML = "Mute";
-        }
-    }
+    // function voiceMute() {
+    //     if (mute.id === "") {
+    //         gainNode.gain.value = 0;
+    //         mute.id = "activated";
+    //         mute.innerHTML = "Unmute";
+    //     } else {
+    //         gainNode.gain.value = 1;
+    //         mute.id = "";
+    //         mute.innerHTML = "Mute";
+    //     }
+    // }
 }
