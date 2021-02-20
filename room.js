@@ -20,9 +20,9 @@ var htmlRoom =
     <p class="text-gray-500">{1}</p>
     <p id="room_parent" class="text-gray-500">   
         <img class="inline h-5 w-5" src="https://pics.freeicons.io/uploads/icons/png/12506835751543238941-64.png" alt="Listeners">
-        <button id="{0}" class="inline mx-4 my-2 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full" onclick="joinRoom(this)">Join</button>
+        <button id="{0}" name="{1}" class="inline mx-4 my-2 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full" onclick="joinRoom(this)">Join</button>
     </p>
-    <div id="listeners_{0}" class="text-gray-500"></div>    
+    <!-- <div id="listeners_{0}" class="text-gray-500"></div> -->
     </div>    
     </div>`;
 

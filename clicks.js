@@ -7,10 +7,12 @@ function joinRoom(button) {
 
 function changeButton(button) {
     var skip = true;
-    if (button.isListening) {
-        send({ action: "leave" });
+    if (button.id == window.room) {
+        send(null, "leave");
         leaver(button.id);
-        window.room = window.room == button.id ? undefined : button.id;
+        button.isListening = false;
+        window.room = undefined;
+        window.desc = undefined;
         skip = false;
     } else {
         button.isListening = true;
@@ -20,8 +22,9 @@ function changeButton(button) {
         button.classList.remove("hover:bg-green-700")
         button.textContent = "Leave"
         window.room = window.room == button.id ? undefined : button.id;
+        window.desc = window.desc == button.name ? undefined : button.name;
         joiner(button.id);
-        send({ action: "join" });
+        send(null, "join");
     }
 
     document.querySelectorAll('button').forEach(element => {
@@ -62,8 +65,6 @@ function createRoom() {
         data.description = description;
     }
     addRoom(title, description);
+    send(null, "create")
     joinRoom(document.getElementById(title));
-    window.room = title;
-    window.desc = description;
-    send(null)
 }
