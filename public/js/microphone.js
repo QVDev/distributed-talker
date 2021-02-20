@@ -54,7 +54,7 @@
     }
 
     function gUM_startCapture() {
-        var codec = new Speex({ quality: 6 });
+        var codec = new Speex({ quality: 9 });
 
         function onmicaudio(samples) {
             var encoded, decoded;
