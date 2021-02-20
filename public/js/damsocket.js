@@ -4,7 +4,20 @@ const gun = Gun(opt);
 var sink;
 
 gun.on("in", function(msg) {
-    if (msg.roomId !== window.room) {
+    if ((msg.data.action !== null || msg.data.action !== undefined) && msg.data.action == "join") {
+        joiner(msg.roomId);
+    }
+
+    if ((msg.data.action !== null || msg.data.action !== undefined) && msg.data.action == "leave") {
+        leaver(msg.roomId);
+    }
+
+    if (msg.data == undefined || (window.room == undefined && msg.roomId && msg.roomDesc)) {
+        addRoom(msg.roomId, msg.roomDesc);
+        return;
+    }
+
+    if (msg.roomId !== window.room || window.room == undefined) {
         return;
     }
 
@@ -20,8 +33,12 @@ gun.on("in", function(msg) {
 })
 
 function send(data) {
+    if (window.room == undefined) {
+        return;
+    }
     gun.on("out", {
         roomId: window.room,
+        roomDesc: window.desc,
         data: data
     });
 }

@@ -16,18 +16,50 @@ var htmlRoom =
     <img class="h-12 w-12 rounded-full" src="https://avatars.dicebear.com/4.5/api/human/{0}.svg?mood[]=happy" alt="User Icon">
     </div>
     <div>
-    <div class="text-xl font-medium text-black">Room {0}</div>
-    <p class="text-gray-500">Talking about tech in the city</p>        
-    <p id="room_parent" class="text-gray-500">
-        <img class="inline h-5 w-5" src="https://pics.freeicons.io/uploads/icons/png/12506835751543238941-64.png" alt="Listeners"> {0}
-        <button id="{0}" class="mx-4 my-2 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full" onclick="joinRoom(this)">Join</button>
+    <div class="text-xl font-medium text-black">{0}</div>
+    <p class="text-gray-500">{1}</p>
+    <p id="room_parent" class="text-gray-500">   
+        <img class="inline h-5 w-5" src="https://pics.freeicons.io/uploads/icons/png/12506835751543238941-64.png" alt="Listeners">
+        <button id="{0}" class="inline mx-4 my-2 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full" onclick="joinRoom(this)">Join</button>
     </p>
+    <div id="listeners_{0}" class="text-gray-500"></div>    
     </div>    
     </div>`;
 
 const grid = document.getElementById("room-grid");
-for (var i = 1; i < 10; i++) {
-    var temp = document.createElement('div');
-    temp.innerHTML = htmlRoom.format(i);
-    grid.append(temp);
+// for (var i = 1; i < 10; i++) {
+//     var temp = document.createElement('div');
+//     temp.innerHTML = htmlRoom.format(i);
+//     grid.append(temp);
+// }
+
+function addRoom(title, description) {
+    if (document.getElementById(title) == undefined) {
+        var temp = document.createElement('div');
+        temp.innerHTML = htmlRoom.format(title, description);
+        grid.append(temp);
+    }
+}
+
+function removeRoom(title) {
+    // document.getElementById(`room_card_${title}`);
+    // window.room = undefined;
+}
+
+function joiner(id) {
+    var element = document.getElementById(`listeners_${id}`)
+    if (element !== undefined && element !== null) {
+        var counter = element.innerText;
+        counter++;
+        if (counter >= 0) element.innerText = counter;
+    }
+}
+
+function leaver(id) {
+    var element = document.getElementById(`listeners_${id}`)
+    if (element !== undefined && element !== null) {
+        var counter = element.innerText;
+        counter--;
+        if (counter >= 0) element.innerText = counter;
+    }
 }

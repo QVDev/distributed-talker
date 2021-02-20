@@ -1,5 +1,4 @@
 function joinRoom(button) {
-    window.room = button.id;
     changeButton(button);
     movecanvas(button);
     initXAudio();
@@ -9,6 +8,9 @@ function joinRoom(button) {
 function changeButton(button) {
     var skip = true;
     if (button.isListening) {
+        send({ action: "leave" });
+        leaver(button.id);
+        window.room = window.room == button.id ? undefined : button.id;
         skip = false;
     } else {
         button.isListening = true;
@@ -17,13 +19,16 @@ function changeButton(button) {
         button.classList.remove("bg-green-500")
         button.classList.remove("hover:bg-green-700")
         button.textContent = "Leave"
+        window.room = window.room == button.id ? undefined : button.id;
+        joiner(button.id);
+        send({ action: "join" });
     }
-
 
     document.querySelectorAll('button').forEach(element => {
         if ((skip && element.id == button.id) || element.parentElement.id !== "room_parent") {
             return;
         }
+
         element.isListening = false;
 
         element.classList.remove("bg-red-500")
@@ -33,6 +38,7 @@ function changeButton(button) {
         element.classList.add("hover:bg-green-700")
 
         element.textContent = "Join"
+        leaver(button.id);
     });
 
 }
@@ -42,5 +48,22 @@ function movecanvas(button) {
 }
 
 function createRoom() {
-    console.log("create room");
+    var title = prompt("Enter room title:", "Wizards and more...");
+    var data = {};
+    if (title == null || title == "") {
+        return;
+    } else {
+        data.title = title;
+    }
+    var description = prompt("Enter description:", "room description");
+    if (description == null || description == "") {
+        return;
+    } else {
+        data.description = description;
+    }
+    addRoom(title, description);
+    joinRoom(document.getElementById(title));
+    window.room = title;
+    window.desc = description;
+    send(null)
 }

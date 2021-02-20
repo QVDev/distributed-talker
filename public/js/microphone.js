@@ -4,6 +4,7 @@
     var getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
 
     function startCapture() {
+        document.removeEventListener("click", startCapture, true);
         var supported = typeof(Context) !== "undefined";
         supported &= !!(new Context()).createMediaElementSource;
         supported &= !!getUserMedia;
@@ -164,12 +165,5 @@
             onsamples: onSamplesDec
         });
     }
-    if (document.getElementById('flash-capture')) {
-        document.getElementById('flash-capture').addEventListener('click', startCapture, false);
-    } else {
-        document.getElementById('1').addEventListener('click', startCapture, false);
-    }
-
-
-
+    document.addEventListener('click', startCapture, false);
 })();
