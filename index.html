@@ -22,18 +22,18 @@
 
 </head>
 
-<body>
-    <div class="container mx-auto h-screen p-20 items-center" style="background-color: beige;">
+<body style="background-color: beige;">
+    <div class="container mx-auto h-screen p-20 items-center">
         <div class="flex">
             <div class="m-auto">
-                <P class="text-6xl text-center font-bold text-black">ROOMS</P>
+                <P class="text-6xl text-center font-bold text-black">Listen now</P>
             </div>
         </div>
         <div id="room-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6 p-6 my-6">
             <!-- Create room card -->
-            <div id="room_card_{0}" class="p-6 max-w-sm mx-auto bg-white rounded-xl shadow-md flex space-x-4 relative">
-                <div>
-                    <div class="text-xl font-medium text-black w-full my-2">New room</div>
+            <div id="room_card_{0}" class="p-6 max-w-sm mx-auto bg-white rounded-xl shadow-md flex space-x-4 relative w-full">
+                <div class="w-full">
+                    <div class="text-xl font-medium text-black w-full my-2">Start a room</div>
                     <div class="mb-3 pt-0">
                         <input id="create_title" type="text" placeholder="Room name" required class="px-3 py-3 placeholder-gray-400 text-gray-700 relative bg-white bg-white rounded text-sm shadow outline-none focus:outline-none focus:shadow-outline w-full" />
                     </div>
@@ -41,7 +41,7 @@
                         <input id="create_description" type="text" placeholder="Description" required class="px-3 py-3 placeholder-gray-400 text-gray-700 relative bg-white bg-white rounded text-sm shadow outline-none focus:outline-none focus:shadow-outline w-full" />
                     </div>
                     <p class="text-gray-500">
-                        <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full w-full" onclick="createRoom()">Create</button>
+                        <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full w-full" onclick="createRoom()">Start</button>
                     </p>
                 </div>
             </div>
