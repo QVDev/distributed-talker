@@ -23,19 +23,30 @@
 </head>
 
 <body>
-    <div class="container mx-auto h-screen p-20 items-center" style="background-color: cadetblue;">
+    <div class="container mx-auto h-screen p-20 items-center" style="background-color: beige;">
         <div class="flex">
             <div class="m-auto">
-                <P class="text-6xl text-center text-white font-bold">ROOMS</P>
-            </div>
-            <div class="flex float-right">
-                <div class="">
-                    <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-2 text-3xl rounded" onclick="createRoom()">Create room</button>
-                </div>
+                <P class="text-6xl text-center font-bold text-black">ROOMS</P>
             </div>
         </div>
         <div id="room-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6 p-6 my-6">
-            <!-- Will be filled automatically by room.js when there are rooms available -->
+            <!-- Create room card -->
+            <div id="room_card_{0}" class="p-6 max-w-sm mx-auto bg-white rounded-xl shadow-md flex space-x-4 relative">
+                <div>
+                    <div class="text-xl font-medium text-black w-full my-2">New room</div>
+                    <div class="mb-3 pt-0">
+                        <input id="create_title" type="text" placeholder="Room name" required class="px-3 py-3 placeholder-gray-400 text-gray-700 relative bg-white bg-white rounded text-sm shadow outline-none focus:outline-none focus:shadow-outline w-full" />
+                    </div>
+                    <div class="mb-3 pt-0">
+                        <input id="create_description" type="text" placeholder="Description" required class="px-3 py-3 placeholder-gray-400 text-gray-700 relative bg-white bg-white rounded text-sm shadow outline-none focus:outline-none focus:shadow-outline w-full" />
+                    </div>
+                    <p class="text-gray-500">
+                        <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full w-full" onclick="createRoom()">Create</button>
+                    </p>
+                </div>
+            </div>
+            <!-- Create room card -->
+            <!-- Rooms be filled automatically by room.js when there are rooms available -->
         </div>
         <!-- Audio visualizer from local audio -->
         <canvas id="visualizer" class="visualizer visualizer absolute top-20 right-4 pointer-events-none"></canvas>

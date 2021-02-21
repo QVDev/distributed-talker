@@ -51,19 +51,23 @@ function movecanvas(button) {
 }
 
 function createRoom() {
-    var title = prompt("Enter room title:", "Wizards and more...");
-    var data = {};
-    if (title == null || title == "") {
+    var title = document.getElementById("create_title").value;
+    var description = document.getElementById("create_description").value;
+
+    if (title == "") {
+        var titleInput = document.getElementById("create_title")
+        titleInput.setCustomValidity("Missing room title");
+        titleInput.reportValidity()
         return;
-    } else {
-        data.title = title;
     }
-    var description = prompt("Enter description:", "room description");
-    if (description == null || description == "") {
+
+    if (description == "") {
+        var descriptionInput = document.getElementById("create_description")
+        descriptionInput.setCustomValidity("Missing room description");
+        descriptionInput.reportValidity()
         return;
-    } else {
-        data.description = description;
     }
+
     addRoom(title, description);
     send(null, "create")
     joinRoom(document.getElementById(title));
