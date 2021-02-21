@@ -27,6 +27,10 @@
         <div class="flex">
             <div class="m-auto">
                 <P class="text-6xl text-center font-bold text-black">Listen now</P>
+                <button class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center" onclick="toggleMute(this)">
+                    <svg class="fill-current w-4 h-4 mr-2" viewBox="0 0 24 24" id="mute"><path d="M18 10L22 14M18 14L22 10"></path><path d="M13 5v14l-5-4H3V9h5z"></path><path stroke-linecap="round" d="M13 14c1.5-1 1.5-3 0-4"></path></svg>                    
+                    <span>unmute microphone</span>
+                  </button>
             </div>
         </div>
         <div id="room-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6 p-6 my-6">

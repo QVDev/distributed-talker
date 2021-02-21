@@ -72,3 +72,20 @@ function createRoom() {
     send(null, "create")
     joinRoom(document.getElementById(title));
 }
+
+function toggleMute(button) {
+    if (!window.microphoneStream) {
+        return;
+    }
+
+    switch (window.microphoneStream.state) {
+        case "suspended":
+            button.innerHTML = `<svg class="fill-current w-4 h-4 mr-2" viewBox="0 0 24 24" id="volume-loud"><path d="M13 5v14l-5-4H3V9h5z"></path><path stroke-linecap="round" d="M13 14c1.5-1 1.5-3 0-4"></path><path d="M16 16C18.0858253 13.9141747 18.0858253 10.0858253 16 8M18 19C21.98552 15.01448 22.0076803 9.00768033 18 5"></path></svg>mute microphone`;
+            window.microphoneStream.resume()
+            break;
+        case "running":
+            button.innerHTML = `<svg class="fill-current w-4 h-4 mr-2" viewBox="0 0 24 24" id="mute"><path d="M18 10L22 14M18 14L22 10"></path><path d="M13 5v14l-5-4H3V9h5z"></path><path stroke-linecap="round" d="M13 14c1.5-1 1.5-3 0-4"></path></svg>unmute microphone`;
+            window.microphoneStream.suspend()
+            break;
+    }
+}

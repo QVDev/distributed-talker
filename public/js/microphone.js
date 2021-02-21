@@ -2,16 +2,21 @@
 
     var Context = window["webkitAudioContext"] || window["mozAudioContext"] || window["AudioContext"];
     var getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+    var initialized = false;
 
     function startCapture() {
-        document.removeEventListener("click", startCapture, true);
-        var supported = typeof(Context) !== "undefined";
-        supported &= !!(new Context()).createMediaElementSource;
-        supported &= !!getUserMedia;
+        if (!initialized) {
+            document.removeEventListener("click", startCapture, true);
+            document.addEventListener('click', null, false);
+            var supported = typeof(Context) !== "undefined";
+            supported &= !!(new Context()).createMediaElementSource;
+            supported &= !!getUserMedia;
 
-        if (supported) {
-            gUM_startCapture();
-            return;
+            if (supported) {
+                gUM_startCapture();
+                initialized = true;
+                return;
+            }
         }
     }
 
@@ -96,6 +101,8 @@
                 var processor = audioContext.createScriptProcessor(1024, 1, 1);
                 var refillBuffer = new Int16Array(190);
 
+                window.microphoneStream = audioContext;
+
                 processor.onaudioprocess = function(event) {
                     var inputBuffer = event.inputBuffer.getChannelData(0);
                     var samples = resampler.resampler(inputBuffer);
@@ -109,6 +116,7 @@
 
                 mic.connect(processor);
                 processor.connect(audioContext.destination);
+                // processor.context.suspend();
             }
         }
         getUserMedia.call(navigator, { audio: true }, callback(onmicaudio), function() {});
