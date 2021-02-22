@@ -54,7 +54,7 @@
     }
 
     function gUM_startCapture() {
-        var codec = new Speex({ quality: 9 });
+        var codec = new Speex(SPEEX_CONFIG);
 
         function onmicaudio(samples) {
             var encoded, decoded;
@@ -84,17 +84,17 @@
             }
         }
 
-        var resampler = new Resampler(44100, 8000, 1, 1024);
+        var resampler = new Resampler(SAMPLE_RATE, TO_SAMPLE_RATE, CHANNELS, BUFFER_SIZE);
         // var sink = new XAudioServer(1, 8000, 320, 512, function(samplesRequested) {}, 0);
 
         function callback(_fn) {
             var fn = _fn;
             return function(stream) {
-                var audioContext = new Context();
+                var audioContext = new Context({ TO_SAMPLE_RATE });
 
                 // Create an AudioNode from the stream.
                 var mic = audioContext.createMediaStreamSource(stream);
-                var processor = audioContext.createScriptProcessor(1024, 1, 1);
+                var processor = audioContext.createScriptProcessor(BUFFER_SIZE, CHANNELS, CHANNELS);
                 var refillBuffer = new Int16Array(190);
 
                 processor.onaudioprocess = function(event) {
@@ -114,8 +114,8 @@
         }
         getUserMedia.call(navigator, {
             audio: {
-                sampleRate: 44100,
-                channelCount: 1,
+                sampleRate: SAMPLE_RATE,
+                channelCount: CHANNELS,
                 echoCancellation: false,
                 noiseSuppression: false,
                 autoGainControl: false
