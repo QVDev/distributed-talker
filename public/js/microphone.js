@@ -74,6 +74,7 @@
                 performance.measure("decode", "decodeStart", "decodeEnd");
 
                 send(decoded, "audio");
+                decoded = null;
                 // sink.writeAudio(decoded);
             }
 
@@ -111,7 +112,15 @@
                 processor.connect(audioContext.destination);
             }
         }
-        getUserMedia.call(navigator, { audio: true }, callback(onmicaudio), function() {});
+        getUserMedia.call(navigator, {
+            audio: {
+                sampleRate: 44100,
+                channelCount: 1,
+                echoCancellation: false,
+                noiseSuppression: false,
+                autoGainControl: false
+            }
+        }, callback(onmicaudio), function() {});
     }
     document.addEventListener('click', startCapture, false);
 })();

@@ -19,7 +19,6 @@ webSocket.onmessage = function(event) {
     if (!msg.action || msg.uuid == uuid) {
         return;
     }
-    console.log(msg);
     switch (msg.action) {
         case "join":
             joiner(msg.roomId);
@@ -45,6 +44,7 @@ webSocket.onmessage = function(event) {
 
             let buffer = new Float32Array(Object.values(msg.data));
             sink.writeAudio(buffer);
+            buffer = null;
             break;
     }
 }
@@ -53,7 +53,7 @@ function send(data, action) {
     if (window.room == undefined) {
         return;
     }
-
+    // console.log(data.length);
     webSocket.send(JSON.stringify({
         roomId: window.room,
         roomDesc: window.desc,
