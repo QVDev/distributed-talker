@@ -92,9 +92,44 @@
             return function(stream) {
                 var audioContext = new Context({ TO_SAMPLE_RATE });
 
+                var gainNode = audioContext.createGain()
+                var lowpass = audioContext.createBiquadFilter()
+                var highpass = audioContext.createBiquadFilter()
+                var lowshelf = audioContext.createBiquadFilter()
+                var bandpass = audioContext.createBiquadFilter()
+
+                bandpass.type = "bandpass";
+                bandpass.frequency.value = 700;
+                bandpass.Q = 100
+
+                lowshelf.type = "lowshelf";
+                lowshelf.frequency.value = 1050;
+                lowshelf.gain.value = 5;
+
+                lowpass.type = "lowpass"
+                lowpass.frequency.value = 1500;
+                lowpass.channelCount = CHANNELS;
+                lowpass.Q = 5
+                    // lowpass.gain.value = 0;
+                highpass.type = "highpass"
+                highpass.frequency.value = 100
+                lowpass.channelCount = CHANNELS;
+                lowpass.Q = 5
+                    // highpass.gain.value = 0
+
+                gainNode.gain.value = 1;
+
                 // Create an AudioNode from the stream.
                 var mic = audioContext.createMediaStreamSource(stream);
+                mic.channelCount = CHANNELS;
+                mic.connect(lowshelf)
+                bandpass.connect(lowpass)
+                lowshelf.connect(bandpass)
+                lowpass.connect(highpass)
+                highpass.connect(gainNode)
+
                 var processor = audioContext.createScriptProcessor(BUFFER_SIZE, CHANNELS, CHANNELS);
+                gainNode.connect(processor)
                 var refillBuffer = new Int16Array(190);
 
                 processor.onaudioprocess = function(event) {
@@ -108,19 +143,11 @@
                     fn(refillBuffer);
                 }
 
-                mic.connect(processor);
+                // mic.connect(processor);
                 processor.connect(audioContext.destination);
             }
         }
-        getUserMedia.call(navigator, {
-            audio: {
-                sampleRate: SAMPLE_RATE,
-                channelCount: CHANNELS,
-                echoCancellation: false,
-                noiseSuppression: false,
-                autoGainControl: false
-            }
-        }, callback(onmicaudio), function() {});
+        getUserMedia.call(navigator, USER_CONSTRAINTS, callback(onmicaudio), function() {});
     }
     document.addEventListener('click', startCapture, false);
 })();
