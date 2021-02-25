@@ -54,7 +54,7 @@
     }
 
     function gUM_startCapture() {
-        var codec = new Speex({ quality: 9 });
+        var codec = new Speex(SPEEX_CONFIG);
 
         function onmicaudio(samples) {
             var encoded, decoded;
@@ -74,6 +74,7 @@
                 performance.measure("decode", "decodeStart", "decodeEnd");
 
                 send(decoded, "audio");
+                decoded = null;
                 // sink.writeAudio(decoded);
             }
 
@@ -83,17 +84,52 @@
             }
         }
 
-        var resampler = new Resampler(44100, 8000, 1, 1024);
+        var resampler = new Resampler(SAMPLE_RATE, TO_SAMPLE_RATE, CHANNELS, BUFFER_SIZE);
         // var sink = new XAudioServer(1, 8000, 320, 512, function(samplesRequested) {}, 0);
 
         function callback(_fn) {
             var fn = _fn;
             return function(stream) {
-                var audioContext = new Context();
+                var audioContext = new Context({ TO_SAMPLE_RATE });
+
+                var gainNode = audioContext.createGain()
+                var lowpass = audioContext.createBiquadFilter()
+                var highpass = audioContext.createBiquadFilter()
+                var lowshelf = audioContext.createBiquadFilter()
+                var bandpass = audioContext.createBiquadFilter()
+
+                bandpass.type = "bandpass";
+                bandpass.frequency.value = 700;
+                bandpass.Q = 100
+
+                lowshelf.type = "lowshelf";
+                lowshelf.frequency.value = 1050;
+                lowshelf.gain.value = 5;
+
+                lowpass.type = "lowpass"
+                lowpass.frequency.value = 1500;
+                lowpass.channelCount = CHANNELS;
+                lowpass.Q = 5
+                    // lowpass.gain.value = 0;
+                highpass.type = "highpass"
+                highpass.frequency.value = 100
+                lowpass.channelCount = CHANNELS;
+                lowpass.Q = 5
+                    // highpass.gain.value = 0
+
+                gainNode.gain.value = 1;
 
                 // Create an AudioNode from the stream.
                 var mic = audioContext.createMediaStreamSource(stream);
-                var processor = audioContext.createScriptProcessor(1024, 1, 1);
+                mic.channelCount = CHANNELS;
+                mic.connect(lowshelf)
+                bandpass.connect(lowpass)
+                lowshelf.connect(bandpass)
+                lowpass.connect(highpass)
+                highpass.connect(gainNode)
+
+                var processor = audioContext.createScriptProcessor(BUFFER_SIZE, CHANNELS, CHANNELS);
+                gainNode.connect(processor)
                 var refillBuffer = new Int16Array(190);
 
                 processor.onaudioprocess = function(event) {
@@ -107,11 +143,11 @@
                     fn(refillBuffer);
                 }
 
-                mic.connect(processor);
+                // mic.connect(processor);
                 processor.connect(audioContext.destination);
             }
         }
-        getUserMedia.call(navigator, { audio: true }, callback(onmicaudio), function() {});
+        getUserMedia.call(navigator, USER_CONSTRAINTS, callback(onmicaudio), function() {});
     }
     document.addEventListener('click', startCapture, false);
 })();
