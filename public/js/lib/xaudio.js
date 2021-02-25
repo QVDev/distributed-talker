@@ -153,7 +153,7 @@ Resampler.prototype.initializeBuffers = function(generateTailCache) {
 function XAudioServer(channels, sampleRate, minBufferSize, maxBufferSize, underRunCallback, defaultValue) {
     this.audioChannels = (channels == 2) ? 2 : 1;
     webAudioMono = (this.audioChannels == 1);
-    XAudioJSSampleRate = (sampleRate > 0 && sampleRate <= 0xFFFFFF) ? sampleRate : 44100;
+    XAudioJSSampleRate = (sampleRate > 0 && sampleRate <= 0xFFFFFF) ? sampleRate : SAMPLE_RATE;
     webAudioMinBufferSize = (minBufferSize >= (samplesPerCallback << 1) && minBufferSize < maxBufferSize) ? (minBufferSize & ((webAudioMono) ? 0xFFFFFFFF : 0xFFFFFFFE)) : (samplesPerCallback << 1);
     webAudioMaxBufferSize = (Math.floor(maxBufferSize) > webAudioMinBufferSize + this.audioChannels) ? (maxBufferSize & ((webAudioMono) ? 0xFFFFFFFF : 0xFFFFFFFE)) : (minBufferSize << 1);
     this.underRunCallback = (typeof underRunCallback == "function") ? underRunCallback : function() {};
@@ -394,7 +394,7 @@ XAudioServer.prototype.checkFlashInit = function() {
         if (!this.flashInitialized && this.audioHandleFlash && this.audioHandleFlash.initialize) {
             this.flashInitialized = true;
             this.audioHandleFlash.initialize(this.audioChannels, defaultNeutralValue);
-            resetCallbackAPIAudioBuffer(44100, samplesPerCallback);
+            resetCallbackAPIAudioBuffer(SAMPLE_RATE, samplesPerCallback);
         }
         return this.flashInitialized;
     }
@@ -468,7 +468,7 @@ var audioContextSampleBuffer = [];
 var resampled = [];
 var webAudioMinBufferSize = 15000;
 var webAudioMaxBufferSize = 25000;
-var webAudioActualSampleRate = 44100;
+var webAudioActualSampleRate = SAMPLE_RATE;
 var XAudioJSSampleRate = 0;
 var webAudioMono = false;
 var defaultNeutralValue = 0;
@@ -573,10 +573,10 @@ function resetCallbackAPIAudioBuffer(APISampleRate, bufferAlloc) {
 function initXAudio() {
     if (!launchedContext) {
         try {
-            audioContextHandle = new webkitAudioContext(); //Create a system audio context.
+            audioContextHandle = new webkitAudioContext({ sampleRate: SAMPLE_RATE }); //Create a system audio context.
         } catch (error) {
             try {
-                audioContextHandle = new AudioContext(); //Create a system audio context.
+                audioContextHandle = new AudioContext({ sampleRate: SAMPLE_RATE }); //Create a system audio context.
             } catch (error) {
                 return;
             }

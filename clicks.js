@@ -2,7 +2,7 @@ function joinRoom(button) {
     changeButton(button);
     movecanvas(button);
     initXAudio();
-    initVisualizer();
+    // initVisualizer();
 }
 
 function changeButton(button) {
