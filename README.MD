@@ -1,13 +1,13 @@
 
 <h1 align="center">
   <br>
-  <a href="https://qvdev.github.io/distributed-talker/"><img src="/fav/android-chrome-192x192.png" alt="distributed-talker" width="200"></a>
+  <a href="https://qvdev.github.io/distributed-talker/"><img src="/fav/android-chrome-192x192.png" alt="Distributed Talker" width="200"></a>
   <br>
-  Distributed-talker
+  Distributed Talker
   <br>
 </h1>
 
-<h4 align="center">A simple audio channel chat <a href="https://qvdev.github.io/distributed-talker/" target="_blank">Distributed-talker</a>.</h4>
+<h4 align="center">A simple audio channel chat <a href="https://qvdev.github.io/distributed-talker/" target="_blank">Distributed Talker</a>.</h4>
 
 <p align="center">
   <a href="#key-features">Key Features</a> •
