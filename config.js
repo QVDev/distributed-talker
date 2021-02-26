@@ -1,21 +1,23 @@
 const CHANNELS = 1;
 const SAMPLE_RATE = 44100
-const TO_SAMPLE_RATE = 8000
 const BUFFER_SIZE = 1024
-const MIN_BUFFER_SIZE = 160
-const MAX_BUFFER_SIZE = 360
+const MIN_BUFFER_SIZE = 1024
+const MAX_BUFFER_SIZE = 2048
+const BITS_SIZE = 70
 const SPEEX_CONFIG = {
-    quality: 9,
+    quality: 8,
     mode: 1,
-    bits_size: 120
+    bits_size: BITS_SIZE,
+
 }
 
 const USER_CONSTRAINTS = {
     audio: {
         sampleRate: SAMPLE_RATE,
+        sampleSize: BITS_SIZE,
         channelCount: CHANNELS,
-        echoCancellation: true,
-        noiseSuppression: true,
-        autoGainControl: false
+        echoCancellation: false,
+        noiseSuppression: false,
+        autoGainControl: false,
     }
 }

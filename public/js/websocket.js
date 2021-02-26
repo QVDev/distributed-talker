@@ -39,7 +39,7 @@ webSocket.onmessage = function(event) {
                 return;
             }
             if (sink == undefined) {
-                sink = new XAudioServer(CHANNELS, TO_SAMPLE_RATE, MIN_BUFFER_SIZE, MAX_BUFFER_SIZE, function(samplesRequested) {}, 0);
+                sink = new XAudioServer(CHANNELS, SAMPLE_RATE, MIN_BUFFER_SIZE, MAX_BUFFER_SIZE, function(samplesRequested) {}, 0);
             }
 
             let buffer = new Float32Array(Object.values(msg.data));

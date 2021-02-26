@@ -84,66 +84,35 @@
             }
         }
 
-        var resampler = new Resampler(SAMPLE_RATE, TO_SAMPLE_RATE, CHANNELS, BUFFER_SIZE);
-        // var sink = new XAudioServer(1, 8000, 320, 512, function(samplesRequested) {}, 0);
-
         function callback(_fn) {
             var fn = _fn;
             return function(stream) {
-                var audioContext = new Context({ TO_SAMPLE_RATE });
+                var audioContext = new Context({ SAMPLE_RATE });
 
                 var gainNode = audioContext.createGain()
-                var lowpass = audioContext.createBiquadFilter()
-                var highpass = audioContext.createBiquadFilter()
-                var lowshelf = audioContext.createBiquadFilter()
-                var bandpass = audioContext.createBiquadFilter()
-
-                bandpass.type = "bandpass";
-                bandpass.frequency.value = 700;
-                bandpass.Q = 100
-
-                lowshelf.type = "lowshelf";
-                lowshelf.frequency.value = 1050;
-                lowshelf.gain.value = 5;
-
-                lowpass.type = "lowpass"
-                lowpass.frequency.value = 1500;
-                lowpass.channelCount = CHANNELS;
-                lowpass.Q = 5
-                    // lowpass.gain.value = 0;
-                highpass.type = "highpass"
-                highpass.frequency.value = 100
-                lowpass.channelCount = CHANNELS;
-                lowpass.Q = 5
-                    // highpass.gain.value = 0
-
-                gainNode.gain.value = 1;
+                gainNode.gain.value = 1.5;
 
                 // Create an AudioNode from the stream.
                 var mic = audioContext.createMediaStreamSource(stream);
                 mic.channelCount = CHANNELS;
-                mic.connect(lowshelf)
-                bandpass.connect(lowpass)
-                lowshelf.connect(bandpass)
-                lowpass.connect(highpass)
-                highpass.connect(gainNode)
+                mic.connect(gainNode)
 
                 var processor = audioContext.createScriptProcessor(BUFFER_SIZE, CHANNELS, CHANNELS);
-                gainNode.connect(processor)
-                var refillBuffer = new Int16Array(190);
+
+                var refillBuffer = new Int16Array(256);
 
                 processor.onaudioprocess = function(event) {
                     var inputBuffer = event.inputBuffer.getChannelData(0);
-                    var samples = resampler.resampler(inputBuffer);
+                    // var samples = resampler.resampler(inputBuffer);
 
-                    for (var i = 0; i < samples.length; ++i) {
-                        refillBuffer[i] = Math.ceil(samples[i] * 32767);
+                    for (var i = 0; i < inputBuffer.length; ++i) {
+                        refillBuffer[i] = Math.ceil(inputBuffer[i] * 32767);
                     }
 
                     fn(refillBuffer);
                 }
-
-                // mic.connect(processor);
+                gainNode.connect(processor)
+                    // mic.connect(processor);
                 processor.connect(audioContext.destination);
             }
         }
