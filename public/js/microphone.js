@@ -4,7 +4,7 @@
     var getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
 
     function startCapture() {
-        document.removeEventListener("click", startCapture, true);
+        document.removeEventListener("click", startCapture, false);
         var supported = typeof(Context) !== "undefined";
         supported &= !!(new Context()).createMediaElementSource;
         supported &= !!getUserMedia;
@@ -93,44 +93,16 @@
                 var audioContext = new Context({ TO_SAMPLE_RATE });
 
                 var gainNode = audioContext.createGain()
-                var lowpass = audioContext.createBiquadFilter()
-                var highpass = audioContext.createBiquadFilter()
-                var lowshelf = audioContext.createBiquadFilter()
-                var bandpass = audioContext.createBiquadFilter()
-
-                bandpass.type = "bandpass";
-                bandpass.frequency.value = 700;
-                bandpass.Q = 100
-
-                lowshelf.type = "lowshelf";
-                lowshelf.frequency.value = 1050;
-                lowshelf.gain.value = 5;
-
-                lowpass.type = "lowpass"
-                lowpass.frequency.value = 1500;
-                lowpass.channelCount = CHANNELS;
-                lowpass.Q = 5
-                    // lowpass.gain.value = 0;
-                highpass.type = "highpass"
-                highpass.frequency.value = 100
-                lowpass.channelCount = CHANNELS;
-                lowpass.Q = 5
-                    // highpass.gain.value = 0
-
                 gainNode.gain.value = 1;
 
                 // Create an AudioNode from the stream.
                 var mic = audioContext.createMediaStreamSource(stream);
                 mic.channelCount = CHANNELS;
-                mic.connect(lowshelf)
-                bandpass.connect(lowpass)
-                lowshelf.connect(bandpass)
-                lowpass.connect(highpass)
-                highpass.connect(gainNode)
+                mic.connect(gainNode)
 
                 var processor = audioContext.createScriptProcessor(BUFFER_SIZE, CHANNELS, CHANNELS);
                 gainNode.connect(processor)
-                var refillBuffer = new Int16Array(190);
+                var refillBuffer = new Int16Array(REFIL_BUFFER_SIZE);
 
                 processor.onaudioprocess = function(event) {
                     var inputBuffer = event.inputBuffer.getChannelData(0);
