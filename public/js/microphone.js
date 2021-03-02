@@ -3,8 +3,13 @@
     var Context = window["webkitAudioContext"] || window["mozAudioContext"] || window["AudioContext"];
     var getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
 
+    function alreadyInited() {
+
+    }
+
     function startCapture() {
         document.removeEventListener("click", startCapture, true);
+        document.addEventListener("click", alreadyInited, true);
         var supported = typeof(Context) !== "undefined";
         supported &= !!(new Context()).createMediaElementSource;
         supported &= !!getUserMedia;
@@ -87,9 +92,13 @@
         var resampler = new Resampler(SAMPLE_RATE, TO_SAMPLE_RATE, CHANNELS, BUFFER_SIZE);
         // var sink = new XAudioServer(1, 8000, 320, 512, function(samplesRequested) {}, 0);
 
+        // const demoCode = async(context) => {
+
+        // };
+
         function callback(_fn) {
             var fn = _fn;
-            return function(stream) {
+            return async function(stream) {
                 var audioContext = new Context({ TO_SAMPLE_RATE });
 
                 var gainNode = audioContext.createGain()
@@ -119,35 +128,59 @@
 
                 gainNode.gain.value = 1;
 
-                // Create an AudioNode from the stream.
-                var mic = audioContext.createMediaStreamSource(stream);
-                mic.channelCount = CHANNELS;
-                mic.connect(lowshelf)
-                bandpass.connect(lowpass)
-                lowshelf.connect(bandpass)
-                lowpass.connect(highpass)
-                highpass.connect(gainNode)
-
-                var processor = audioContext.createScriptProcessor(BUFFER_SIZE, CHANNELS, CHANNELS);
-                gainNode.connect(processor)
+                await audioContext.audioWorklet.addModule('bypass-processor.js');
+                const oscillator = new OscillatorNode(audioContext);
+                const bypasser = new AudioWorkletNode(audioContext, 'bypass-processor');
                 var refillBuffer = new Int16Array(190);
+                bypasser.port.onmessage = (event) => {
+                    // Handling data from the processor.                    
+                    // console.log(event.data);
+                    var inputBuffer = event.data;
+                    // var samples = resampler.resampler(inputBuffer);
 
-                processor.onaudioprocess = function(event) {
-                    var inputBuffer = event.inputBuffer.getChannelData(0);
-                    var samples = resampler.resampler(inputBuffer);
-
-                    for (var i = 0; i < samples.length; ++i) {
-                        refillBuffer[i] = Math.ceil(samples[i] * 32767);
+                    for (var i = 0; i < inputBuffer.length; ++i) {
+                        refillBuffer[i] = Math.ceil(inputBuffer[i] * 32767);
                     }
 
                     fn(refillBuffer);
-                }
+                };
+
+                bypasser.port.postMessage('Hello!');
+                oscillator.connect(bypasser).connect(gainNode);
+                oscillator.start();
+
+                // Create an AudioNode from the stream.
+                var mic = audioContext.createMediaStreamSource(stream);
+                mic.channelCount = CHANNELS;
+                // mic.connect(lowshelf)
+                // bandpass.connect(lowpass)
+                // lowshelf.connect(bandpass)
+                // lowpass.connect(highpass)
+                // highpass.connect(gainNode)
+
+
+
+
+                // var processor = audioContext.createScriptProcessor(BUFFER_SIZE, CHANNELS, CHANNELS);
+                // gainNode.connect(processor)
+                // var refillBuffer = new Int16Array(190);
+
+                // processor.onaudioprocess = function(event) {
+                //     var inputBuffer = event.inputBuffer.getChannelData(0);
+                //     var samples = resampler.resampler(inputBuffer);
+
+                //     for (var i = 0; i < samples.length; ++i) {
+                //         refillBuffer[i] = Math.ceil(samples[i] * 32767);
+                //     }
+
+                //     fn(refillBuffer);
+                // }
 
                 // mic.connect(processor);
-                processor.connect(audioContext.destination);
+                gainNode.connect(audioContext.destination);
             }
         }
         getUserMedia.call(navigator, USER_CONSTRAINTS, callback(onmicaudio), function() {});
     }
-    document.addEventListener('click', startCapture, false);
+    document.addEventListener('click', startCapture, true);
 })();
