@@ -1,3 +1,4 @@
+var webSocket = new WebSocket("wss://de.meething.space:443/talker");
 var sink;
 
 function uuidv4() {
@@ -9,8 +10,11 @@ function uuidv4() {
 }
 var uuid = uuidv4();
 
+webSocket.onopen = function(event) {
+    console.log(event);
+};
 
-function receiveLocal(msg) {
+webSocket.onmessage = function(msg) {
     if (!msg.action) {
         return;
     }
@@ -48,7 +52,7 @@ function send(data, action) {
     if (window.room == undefined) {
         return;
     }
-    receiveLocal({
+    webSocket.send({
         roomId: window.room,
         roomDesc: window.desc,
         data: data,
