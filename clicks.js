@@ -2,13 +2,14 @@ function joinRoom(button) {
     changeButton(button);
     movecanvas(button);
     initXAudio();
+    startWebsocket(window.room);
     // initVisualizer();
 }
 
 function changeButton(button) {
     var skip = true;
     if (button.id == window.room) {
-        send(null, "leave");
+        send("leave");
         leaver(button.id);
         button.isListening = false;
         window.room = undefined;
@@ -24,7 +25,7 @@ function changeButton(button) {
         window.room = window.room == button.id ? undefined : button.id;
         window.desc = window.desc == button.name ? undefined : button.name;
         joiner(button.id);
-        send(null, "join");
+        send("join");
     }
 
     document.querySelectorAll('button').forEach(element => {
@@ -69,6 +70,6 @@ function createRoom() {
     }
 
     addRoom(title, description);
-    send(null, "create")
+    send("create")
     joinRoom(document.getElementById(title));
 }

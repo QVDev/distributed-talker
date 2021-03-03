@@ -7,6 +7,7 @@ gun.on("in", function(msg) {
     switch (msg.action) {
         case "join":
             joiner(msg.roomId);
+            addRoom(msg.roomId, msg.roomDesc);
             break;
         case "leave":
             leaver(msg.roomId);
@@ -15,6 +16,7 @@ gun.on("in", function(msg) {
             addRoom(msg.roomId, msg.roomDesc);
             break;
         case "audio":
+            break;
             if (msg.roomId !== window.room || window.room == undefined) {
                 addRoom(msg.roomId, msg.roomDesc);
                 return;
@@ -29,18 +31,17 @@ gun.on("in", function(msg) {
 
             let buffer = new Float32Array(Object.values(msg.data));
             sink.writeAudio(buffer);
-            break;
+            // break;
     }
 })
 
-function send(data, action) {
+function send(action) {
     if (window.room == undefined) {
         return;
     }
     gun.on("out", {
         roomId: window.room,
         roomDesc: window.desc,
-        data: data,
         action: action
     });
 }

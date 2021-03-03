@@ -6,8 +6,8 @@ const MIN_BUFFER_SIZE = 320
 const MAX_BUFFER_SIZE = 512
 const REFIL_BUFFER_SIZE = (TO_SAMPLE_RATE * 0.02375)
 const SPEEX_CONFIG = {
-    quality: 8,
-    // mode: 1,
+    quality: 10,
+    mode: 7,
     complexity: 9,
     enhancement: true,
     vad: true,

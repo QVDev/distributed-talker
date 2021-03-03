@@ -73,7 +73,7 @@
                 performance.mark("decodeEnd");
                 performance.measure("decode", "decodeStart", "decodeEnd");
 
-                send(decoded, "audio");
+                sendData(decoded);
                 decoded = null;
                 // sink.writeAudio(decoded);
             }
