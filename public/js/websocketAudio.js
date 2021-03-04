@@ -1,6 +1,7 @@
 var dataSocket;
 
 function startReceiveAudio(room) {
+    var codec = new Speex(SPEEX_CONFIG);
     dataSocket = new WebSocket(`wss://de.meething.space/${room}`);
     dataSocket.binaryType = "arraybuffer";
     var sink;
@@ -10,7 +11,7 @@ function startReceiveAudio(room) {
     };
 
     dataSocket.onmessage = function(msg) {
-        let sender = new Float32Array(msg.data, 0, 3);
+        let sender = new Uint8Array(msg.data, 0, 3);
         if (sender[0] == uuid.toString().charAt(0) && sender[1] == uuid.toString().charAt(1) && sender[2] == uuid.toString().charAt(2)) {
             return
         }
@@ -22,9 +23,10 @@ function startReceiveAudio(room) {
             sink = new XAudioServer(CHANNELS, TO_SAMPLE_RATE, MIN_BUFFER_SIZE, MAX_BUFFER_SIZE, function(samplesRequested) {}, 0);
         }
 
-        let buffer = new Float32Array(msg.data, 12, msg.data.length);
+        let buffer = new Uint8Array(msg.data, 3, msg.data.length);
+        decoded = codec.decode(buffer);
 
-        sink.writeAudio(buffer);
+        sink.writeAudio(decoded);
         buffer = null;
     }
 }
@@ -37,17 +39,14 @@ function sendAudio(data) {
     if (window.room == undefined || dataSocket.readyState != dataSocket.OPEN) {
         return;
     }
-    var id = new Float32Array(3);
-    id[0] = uuid.toString().charAt(0);
-    id[1] = uuid.toString().charAt(1);
-    id[2] = uuid.toString().charAt(2);
-    data = Float32Concat(id, data);
-    dataSocket.send(data);
+    var id = new Uint8Array([uuid.toString().charAt(0), uuid.toString().charAt(1), uuid.toString().charAt(2)]);
+    var concatArray = concat(id, data[0])
+    dataSocket.send(concatArray);
 }
 
-function Float32Concat(first, second) {
+function concat(first, second) {
     var firstLength = first.length,
-        result = new Float32Array(firstLength + second.length);
+        result = new Uint8Array(firstLength + second.length);
 
     result.set(first);
     result.set(second, firstLength);

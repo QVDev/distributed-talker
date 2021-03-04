@@ -57,30 +57,10 @@
         var codec = new Speex(SPEEX_CONFIG);
 
         function onmicaudio(samples) {
-            var encoded, decoded;
-
-            performance.mark("encodeStart");
+            var encoded
             encoded = codec.encode(samples);
-            performance.mark("encodeEnd");
-            performance.measure("encode", "encodeStart", "encodeEnd");
-
-            nr_samples += samples.length;
-            nr_measures++;
-
             if (!!encoded) {
-                performance.mark("decodeStart");
-                decoded = codec.decode(encoded[0]);
-                performance.mark("decodeEnd");
-                performance.measure("decode", "decodeStart", "decodeEnd");
-
-                send(decoded, "audio");
-                decoded = null;
-                // sink.writeAudio(decoded);
-            }
-
-            if (nr_measures >= NR_MEASURES_PER_SEC) {
-                // var st = stats();
-                // printStreamTimes(st[1], st[0], nr_samples);
+                send(encoded, "audio");
             }
         }
 

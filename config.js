@@ -7,7 +7,8 @@ const MAX_BUFFER_SIZE = 512
 const REFIL_BUFFER_SIZE = (TO_SAMPLE_RATE * 0.02375)
 const SPEEX_CONFIG = {
     quality: 8,
-    // mode: 1,
+    // mode: 0,
+    // bits_size: REFIL_BUFFER_SIZE,
     complexity: 9,
     enhancement: true,
     vad: true,
@@ -24,7 +25,6 @@ const SPEEX_CONFIG = {
     pp_dereverb_decay: 0.4,
     pp_dereverb_level: 0.3,
     experimental_rtcp_feedback: false
-
 }
 
 const USER_CONSTRAINTS = {

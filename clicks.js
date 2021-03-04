@@ -11,6 +11,7 @@ function changeButton(button) {
     if (button.id == window.room) {
         send(null, "leave");
         leaver(button.id);
+        stopReceiveAudio()
         button.isListening = false;
         window.room = undefined;
         window.desc = undefined;
