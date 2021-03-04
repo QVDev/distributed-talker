@@ -23,7 +23,7 @@ function initVisualizer(audioContext) {
     var canvas = document.querySelector('.visualizer');
     var canvasCtx = canvas.getContext("2d");
 
-    var intendedWidth = 75; //document.getElementById('room-grid').clientWidth;
+    var intendedWidth = 175; //document.getElementById('room-grid').clientWidth;
 
     canvas.setAttribute('width', intendedWidth);
 
@@ -39,7 +39,7 @@ function initVisualizer(audioContext) {
 
 
     function visualize() {
-        WIDTH = 75; //canvas.width;
+        WIDTH = 175; //canvas.width;
         HEIGHT = 50; //canvas.height;
 
 

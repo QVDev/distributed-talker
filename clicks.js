@@ -1,6 +1,6 @@
 function joinRoom(button) {
     changeButton(button);
-    movecanvas(button);
+    // movecanvas(button);
     initXAudio();
     startReceiveAudio(window.room);
 }
