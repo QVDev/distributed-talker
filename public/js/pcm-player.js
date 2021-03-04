@@ -12,7 +12,6 @@ PCMPlayer.prototype.init = function(option) {
     this.option = Object.assign({}, defaults, option);
     this.samples = new Float32Array();
     this.flush = this.flush.bind(this);
-    this.interval = setInterval(this.flush, this.option.flushingTime);
     this.maxValue = this.getMaxValue();
     this.typedArray = this.getTypedArray();
     this.createContext();
@@ -54,6 +53,13 @@ PCMPlayer.prototype.isTypedArray = function(data) {
 
 PCMPlayer.prototype.feed = function(data) {
     if (!this.isTypedArray(data)) return;
+    if (this.samples.length > MIN_BUFFER_SIZE) {
+        this.flush();
+    }
+    if ((this.startTime - this.audioCtx.currentTime) > this.option.flushingTime) {
+        this.flush();
+        return;
+    }
     data = this.getFormatedValue(data);
     var tmp = new Float32Array(this.samples.length + data.length);
     tmp.set(this.samples, 0);
@@ -77,9 +83,6 @@ PCMPlayer.prototype.volume = function(volume) {
 };
 
 PCMPlayer.prototype.destroy = function() {
-    if (this.interval) {
-        clearInterval(this.interval);
-    }
     this.samples = null;
     this.audioCtx.close();
     this.audioCtx = null;
@@ -117,7 +120,8 @@ PCMPlayer.prototype.flush = function() {
     if (this.startTime < this.audioCtx.currentTime) {
         this.startTime = this.audioCtx.currentTime;
     }
-    console.log('start vs current ' + this.startTime + ' vs ' + this.audioCtx.currentTime + ' duration: ' + audioBuffer.duration);
+
+    // console.log('start vs current ' + this.startTime + ' vs ' + this.audioCtx.currentTime + ' duration: ' + audioBuffer.duration + ' delay: ' + (this.startTime - this.audioCtx.currentTime));
     bufferSource.buffer = audioBuffer;
     bufferSource.connect(this.gainNode);
     bufferSource.start(this.startTime);
