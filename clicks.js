@@ -3,6 +3,7 @@ function joinRoom(button) {
     movecanvas(button);
     initXAudio();
     // initVisualizer();
+    startReceiveAudio(window.room);
 }
 
 function changeButton(button) {
