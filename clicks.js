@@ -73,3 +73,17 @@ function createRoom() {
     send(null, "create")
     joinRoom(document.getElementById(title));
 }
+
+function mic(value) {
+    if (gainNode) {
+        if (value.checked) {
+            gainNode.gain.value = 1;
+            document.getElementById("muted-text").innerText = "Mic is ON!!"
+        } else {
+            gainNode.gain.value = 0;
+            document.getElementById("muted-text").innerText = "Mic is OFF!"
+        }
+    } else {
+        value.checked = !value.checked;
+    }
+}

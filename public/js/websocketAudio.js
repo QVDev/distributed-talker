@@ -25,7 +25,7 @@ function startReceiveAudio(room) {
                 encoding: '32bitFloat',
                 channels: CHANNELS,
                 sampleRate: TO_SAMPLE_RATE,
-                flushingTime: 120
+                flushingTime: 20
             });
         }
         // if (sink == undefined) {

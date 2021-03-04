@@ -99,17 +99,17 @@ PCMPlayer.prototype.flush = function() {
     for (channel = 0; channel < this.option.channels; channel++) {
         audioData = audioBuffer.getChannelData(channel);
         offset = channel;
-        decrement = 50;
+        // decrement = 50;
         for (i = 0; i < length; i++) {
             audioData[i] = this.samples[offset];
-            /* fadein */
-            if (i < 50) {
-                audioData[i] = (audioData[i] * i) / 50;
-            }
-            /* fadeout*/
-            if (i >= (length - 51)) {
-                audioData[i] = (audioData[i] * decrement--) / 50;
-            }
+            // /* fadein */
+            // if (i < 50) {
+            //     audioData[i] = (audioData[i] * i) / 50;
+            // }
+            // /* fadeout*/
+            // if (i >= (length - 51)) {
+            //     audioData[i] = (audioData[i] * decrement--) / 50;
+            // }
             offset += this.option.channels;
         }
     }
@@ -117,7 +117,7 @@ PCMPlayer.prototype.flush = function() {
     if (this.startTime < this.audioCtx.currentTime) {
         this.startTime = this.audioCtx.currentTime;
     }
-    // console.log('start vs current ' + this.startTime + ' vs ' + this.audioCtx.currentTime + ' duration: ' + audioBuffer.duration);
+    console.log('start vs current ' + this.startTime + ' vs ' + this.audioCtx.currentTime + ' duration: ' + audioBuffer.duration);
     bufferSource.buffer = audioBuffer;
     bufferSource.connect(this.gainNode);
     bufferSource.start(this.startTime);
