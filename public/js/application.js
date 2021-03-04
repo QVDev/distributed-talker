@@ -70,8 +70,4 @@
         }, isTypedArray);
     }
 
-    setTimeout(function() {
-        Speex.checkAudioElements();
-    }, 200);
-
 })(window);
