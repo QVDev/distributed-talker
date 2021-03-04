@@ -1,4 +1,4 @@
-var webSocket = new WebSocket("wss://gunptt.herokuapp.com/gun");
+var webSocket = new WebSocket("wss://de.meething.space/talker");
 var sink;
 
 function uuidv4() {

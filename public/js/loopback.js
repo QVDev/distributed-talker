@@ -10,8 +10,7 @@ function uuidv4() {
 var uuid = uuidv4();
 
 
-function receiveLocal(event) {
-    const msg = JSON.parse(event);
+function receiveLocal(msg) {
     if (!msg.action) {
         return;
     }
@@ -49,11 +48,11 @@ function send(data, action) {
     if (window.room == undefined) {
         return;
     }
-    receiveLocal(JSON.stringify({
+    receiveLocal({
         roomId: window.room,
         roomDesc: window.desc,
         data: data,
         action: action,
         uuid: uuid
-    }));
+    });
 }
