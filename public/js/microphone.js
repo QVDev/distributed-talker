@@ -1,3 +1,4 @@
+var gainNode;
 (function() {
 
     var Context = window["webkitAudioContext"] || window["mozAudioContext"] || window["AudioContext"];
@@ -72,7 +73,7 @@
             return function(stream) {
                 var audioContext = new Context({ TO_SAMPLE_RATE });
 
-                var gainNode = audioContext.createGain()
+                gainNode = audioContext.createGain()
                 gainNode.gain.value = 1;
 
                 // Create an AudioNode from the stream.
@@ -103,3 +104,7 @@
     }
     document.addEventListener('click', startCapture, false);
 })();
+
+function mic(value) {
+    gainNode.gain.value = value;
+}
