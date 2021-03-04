@@ -1,6 +1,6 @@
 var isStarted = false;
 
-function initVisualizer() {
+function initVisualizer(audioContext) {
     if (isStarted == true) {
         return;
     }
@@ -12,7 +12,7 @@ function initVisualizer() {
 
     //set up the different audio nodes we will use for the app
 
-    var analyser = audioContextHandle.createAnalyser();
+    var analyser = audioContext.createAnalyser();
     analyser.minDecibels = -90;
     analyser.maxDecibels = -10;
     analyser.smoothingTimeConstant = 0.85;
@@ -33,7 +33,7 @@ function initVisualizer() {
 
     //main block for doing the audio recording
 
-    audioNode.connect(analyser);
+    gainNode.connect(analyser);
     visualize();
 
 

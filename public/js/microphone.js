@@ -78,6 +78,7 @@ var gainNode;
 
                 // Create an AudioNode from the stream.
                 var mic = audioContext.createMediaStreamSource(stream);
+                initVisualizer(audioContext);
                 mic.channelCount = CHANNELS;
                 mic.connect(gainNode)
 
@@ -106,5 +107,15 @@ var gainNode;
 })();
 
 function mic(value) {
-    gainNode.gain.value = value;
+    if (gainNode) {
+        if (value.checked) {
+            gainNode.gain.value = 1;
+            document.getElementById("muted-text").innerText = "Mic ON!"
+        } else {
+            gainNode.gain.value = 0;
+            document.getElementById("muted-text").innerText = "Mic OFF!"
+        }
+    } else {
+        value.checked = !value.checked;
+    }
 }
