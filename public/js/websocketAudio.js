@@ -4,7 +4,8 @@ function startReceiveAudio(room) {
     var codec = new Speex(SPEEX_CONFIG);
     dataSocket = new WebSocket(`wss://de.meething.space/${room}`);
     dataSocket.binaryType = "arraybuffer";
-    var sink;
+    // var sink;
+    var player;
 
     dataSocket.onopen = function(event) {
         console.log(event);
@@ -19,14 +20,23 @@ function startReceiveAudio(room) {
         if (window.launchedContext == undefined || window.launchedContext == false) {
             return;
         }
-        if (sink == undefined) {
-            sink = new XAudioServer(CHANNELS, TO_SAMPLE_RATE, MIN_BUFFER_SIZE, MAX_BUFFER_SIZE, function(samplesRequested) {}, 0);
+        if (player == undefined) {
+            player = new PCMPlayer({
+                encoding: '32bitFloat',
+                channels: CHANNELS,
+                sampleRate: TO_SAMPLE_RATE,
+                flushingTime: 120
+            });
         }
+        // if (sink == undefined) {
+        //     sink = new XAudioServer(CHANNELS, TO_SAMPLE_RATE, MIN_BUFFER_SIZE, MAX_BUFFER_SIZE, function(samplesRequested) {}, 0);
+        // }
 
         let buffer = new Uint8Array(msg.data, 3, msg.data.length);
         decoded = codec.decode(buffer);
 
-        sink.writeAudio(decoded);
+        // sink.writeAudio(decoded);
+        player.feed(decoded);
         buffer = null;
     }
 }
