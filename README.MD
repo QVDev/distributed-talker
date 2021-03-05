@@ -55,6 +55,7 @@ This software uses the following open source packages:
 - [Speex.js](https://github.com/jpemartins/speex.js)
 - [XAudioJS](https://github.com/taisel/XAudioJS)
 - [Gun.eco](http://gun.eco/)
+- [PCM-Player](https://github.com/samirkumardas/pcm-player)
 
 ## License
 
