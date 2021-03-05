@@ -7,7 +7,8 @@ PCMPlayer.prototype.init = function(option) {
         encoding: '16bitInt',
         channels: 1,
         sampleRate: 8000,
-        flushingTime: 1000
+        flushingTime: 1000,
+        audioElementId: "audio-control"
     };
     this.option = Object.assign({}, defaults, option);
     this.samples = new Float32Array();
@@ -43,8 +44,21 @@ PCMPlayer.prototype.createContext = function() {
     this.audioCtx = new(window.AudioContext || window.webkitAudioContext)();
     this.gainNode = this.audioCtx.createGain();
     this.gainNode.gain.value = 1;
-    this.gainNode.connect(this.audioCtx.destination);
+
     this.startTime = this.audioCtx.currentTime;
+
+    var audioElement = document.getElementById(this.option.audioElementId);
+    if (audioElement == undefined || audioElement == null) {
+        this.gainNode.connect(this.audioCtx.destination);
+    } else {
+        var destination = this.audioCtx.createMediaStreamDestination();
+        this.gainNode.connect(destination);
+        audioElement.srcObject = destination.stream;
+        audioElement.play()
+            .catch(error => {
+                console.log(error)
+            });
+    }
 };
 
 PCMPlayer.prototype.isTypedArray = function(data) {
