@@ -7,7 +7,7 @@ function uuidv4() {
 var uuid = uuidv4();
 
 webSocket.onopen = function(event) {
-    console.log(event);
+    // console.log(event);
 };
 
 webSocket.onmessage = function(event) {

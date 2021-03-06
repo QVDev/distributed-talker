@@ -8,7 +8,7 @@ function startReceiveAudio(room) {
     var player;
 
     dataSocket.onopen = function(event) {
-        console.log(event);
+        // console.log(event);
     };
 
     dataSocket.onmessage = function(msg) {
@@ -16,6 +16,7 @@ function startReceiveAudio(room) {
         if (sender[0] == uuid.toString().charAt(0) && sender[1] == uuid.toString().charAt(1) && sender[2] == uuid.toString().charAt(2)) {
             return
         }
+
 
         if (window.launchedContext == undefined || window.launchedContext == false) {
             return;
@@ -46,7 +47,9 @@ function stopReceiveAudio() {
 }
 
 function sendAudio(data) {
-    if (window.room == undefined || dataSocket.readyState != dataSocket.OPEN) {
+    if (window.room == undefined ||
+        dataSocket.readyState != dataSocket.OPEN ||
+        gainNode.gain.value == 0) {
         return;
     }
     var id = new Uint8Array([uuid.toString().charAt(0), uuid.toString().charAt(1), uuid.toString().charAt(2)]);

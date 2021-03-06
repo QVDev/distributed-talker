@@ -54,10 +54,15 @@ var gainNode;
         return [mdt, met];
     }
 
+    function sum(previousValue, currentValue) {
+        return previousValue + currentValue;
+    }
+
     function gUM_startCapture() {
         var codec = new Speex(SPEEX_CONFIG);
 
         function onmicaudio(samples) {
+            if (samples.reduce(sum) == 0) return;
             var encoded
             encoded = codec.encode(samples);
             if (!!encoded) {

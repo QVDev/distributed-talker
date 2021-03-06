@@ -67,9 +67,6 @@ PCMPlayer.prototype.isTypedArray = function(data) {
 
 PCMPlayer.prototype.feed = function(data) {
     if (!this.isTypedArray(data)) return;
-    if (this.samples.length > MIN_BUFFER_SIZE) {
-        this.flush();
-    }
     if ((this.startTime - this.audioCtx.currentTime) > this.option.flushingTime) {
         this.flush();
         return;
@@ -79,6 +76,7 @@ PCMPlayer.prototype.feed = function(data) {
     tmp.set(this.samples, 0);
     tmp.set(data, this.samples.length);
     this.samples = tmp;
+    this.flush();
 };
 
 PCMPlayer.prototype.getFormatedValue = function(data) {
@@ -119,14 +117,6 @@ PCMPlayer.prototype.flush = function() {
         // decrement = 50;
         for (i = 0; i < length; i++) {
             audioData[i] = this.samples[offset];
-            // /* fadein */
-            // if (i < 50) {
-            //     audioData[i] = (audioData[i] * i) / 50;
-            // }
-            // /* fadeout*/
-            // if (i >= (length - 51)) {
-            //     audioData[i] = (audioData[i] * decrement--) / 50;
-            // }
             offset += this.option.channels;
         }
     }
