@@ -1,11 +1,13 @@
 var dataSocket;
+var codec = new Speex(SPEEX_CONFIG);
+var player;
 
 function startReceiveAudio(room) {
-    var codec = new Speex(SPEEX_CONFIG);
+
     dataSocket = new WebSocket(`wss://de.meething.space/${room}`);
     dataSocket.binaryType = "arraybuffer";
     // var sink;
-    var player;
+
     var lastTime = 0;
     var jitterBuffer = new Map()
 
@@ -19,10 +21,10 @@ function startReceiveAudio(room) {
         time = time.toString().replaceAll(',', '')
 
 
-        let diff = time - lastTime
-        let latency = Date.now() - time;
+        // let diff = time - lastTime
+        // let latency = time - Date.now();
         // console.log("latency::" + latency);
-        lastTime = time;
+        // lastTime = time;
 
         // console.log(time);
         if (sender[0] == uuid.toString().charAt(0) && sender[1] == uuid.toString().charAt(1) && sender[2] == uuid.toString().charAt(2)) {
@@ -48,19 +50,39 @@ function startReceiveAudio(room) {
         let buffer = new Uint8Array(msg.data, 16, msg.data.length);
         jitterBuffer.set(time, buffer);
 
-        if (jitterBuffer.size > latency) {
+        if (jitterBuffer.size > 10) {
             var mapAsc = new Map([...jitterBuffer.entries()].sort());
             jitterBuffer.clear();
-            mapAsc.forEach(value => {
-                decoded = codec.decode(value);
-                player.feed(decoded);
-            });
+            play(mapAsc);
+            // });
         }
 
         // sink.writeAudio(decoded);
 
         buffer = null;
     }
+}
+
+async function play(mapAsc) {
+    var all = concatenate(Uint8Array, mapAsc)
+        // var all = concatenate(Uint8Array, mapAsc.values())
+        // mapAsc.forEach(value => {
+    decoded = codec.decode(all);
+    player.feed(decoded);
+}
+
+function concatenate(resultConstructor, values) {
+    let totalLength = 0;
+    for (let arr of values) {
+        totalLength += arr[1].length;
+    }
+    let result = new resultConstructor(totalLength);
+    let offset = 0;
+    for (let arr of values) {
+        result.set(arr[1], offset);
+        offset += arr[1].length;
+    }
+    return result;
 }
 
 function compareMaps(map1, map2) {
