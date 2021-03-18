@@ -22,8 +22,6 @@ function startReceiveAudio(room) {
 
 
         // let diff = time - lastTime
-        // let latency = time - Date.now();
-        // console.log("latency::" + latency);
         // lastTime = time;
 
         // console.log(time);
@@ -47,14 +45,16 @@ function startReceiveAudio(room) {
         //     sink = new XAudioServer(CHANNELS, TO_SAMPLE_RATE, MIN_BUFFER_SIZE, MAX_BUFFER_SIZE, function(samplesRequested) {}, 0);
         // }
 
+        // let latency = Date.now() - time;
+        // console.log("latency::" + latency);
+
         let buffer = new Uint8Array(msg.data, 16, msg.data.length);
         jitterBuffer.set(time, buffer);
 
-        if (jitterBuffer.size > 10) {
+        if (jitterBuffer.size > 20) {
             var mapAsc = new Map([...jitterBuffer.entries()].sort());
             jitterBuffer.clear();
             play(mapAsc);
-            // });
         }
 
         // sink.writeAudio(decoded);
@@ -65,8 +65,6 @@ function startReceiveAudio(room) {
 
 async function play(mapAsc) {
     var all = concatenate(Uint8Array, mapAsc)
-        // var all = concatenate(Uint8Array, mapAsc.values())
-        // mapAsc.forEach(value => {
     decoded = codec.decode(all);
     player.feed(decoded);
 }

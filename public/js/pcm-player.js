@@ -53,13 +53,53 @@ PCMPlayer.prototype.createContext = function() {
     } else {
         var destination = this.audioCtx.createMediaStreamDestination();
         this.gainNode.connect(destination);
+        // startRecording(destination.stream, 20000).then(recordedChunks => {
+        //     let recordedBlob = new Blob(recordedChunks, { type: "audio/webm" });
+        //     var url = URL.createObjectURL(recordedBlob);
+        //     var a = document.createElement('a');
+        //     document.body.appendChild(a);
+        //     a.style = 'display: none';
+        //     a.href = url;
+        //     a.download = 'test_40.webm';
+        //     a.click();
+        //     window.URL.revokeObjectURL(url);
+        // })
         audioElement.srcObject = destination.stream;
         audioElement.play()
             .catch(error => {
                 console.log(error)
             });
+
     }
 };
+
+function startRecording(stream, lengthInMS) {
+    let recorder = new MediaRecorder(stream);
+    let data = [];
+
+    recorder.ondataavailable = event => data.push(event.data);
+    recorder.start();
+    console.log(recorder.state + " for " + (lengthInMS / 1000) + " seconds...");
+
+    let stopped = new Promise((resolve, reject) => {
+        recorder.onstop = resolve;
+        recorder.onerror = event => reject(event.name);
+    });
+
+    let recorded = wait(lengthInMS).then(
+        () => recorder.state == "recording" && recorder.stop()
+    );
+
+    return Promise.all([
+            stopped,
+            recorded
+        ])
+        .then(() => data);
+}
+
+function wait(delayInMS) {
+    return new Promise(resolve => setTimeout(resolve, delayInMS));
+}
 
 PCMPlayer.prototype.isTypedArray = function(data) {
     return (data.byteLength && data.buffer && data.buffer.constructor == ArrayBuffer);
